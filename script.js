@@ -1,59 +1,46 @@
-console.log("Hello world")
 
 function getComputerChoice(){
     return Math.floor(Math.random() * 3);
 }
 
-var humanChoice;
-var computerChoice;
 var humanScore = 0;
 var computerScore = 0;
 
-function getHumanChoice(){
-    humanChoice = parseInt(prompt("Enter you choice: (0 for rock, 1 for paper and 2 for scissor"))
-}
-
-
-
-function evaluate(humanChoice, computerChoice){
-    
-    if(humanChoice == computerChoice){
-        humanScore++;
-        computerScore++;
-        console.log("It's a draw!")
-    }
-
-    if(humanChoice == (computerChoice + 1) %3){
-        humanScore++;
-        console.log("You win!")
-    }
-
-    if(humanChoice == (computerChoice + 2) % 3){
-        computerScore++;
-        console.log("You lost!")
-    }
-}
+const buttons = document.querySelectorAll(".btn");
+const result = document.querySelector(".results");
 
 function playRound(humanChoice, computerChoice){
-    evaluate(humanChoice, computerChoice)
+    
+    if(humanChoice === computerChoice){
+        result.textContent = "It's a draw!";
+    } else if(humanChoice === (computerChoice + 1) % 3){
+        humanScore++;
+        result.textContent = "You won!";
+    } else {
+        computerScore++;
+        result.textContent = "You Lost!";
+    }
+    
+    // Update score display
+    result.textContent += ` Human: ${humanScore}, Computer: ${computerScore}`;
 }
 
-var i = 0;
-while(i < 6) {
-    getHumanChoice();
-    computerChoice = getComputerChoice();
-    playRound(humanChoice, computerChoice);
-    i++;
-}
-
-if(humanScore > computerScore){
-    console.log("You won it all!")
-}
-
-if(computerScore > humanScore){
-    console.log("Better luck next time!")
-}
-
-if( humanScore == computerScore){
-    console.log("It's a draw")
-}
+let i = 0;
+buttons.forEach(button => {
+    button.addEventListener("click", function(e){
+        const humanChoice = parseInt(e.target.id);
+        const computerChoice = getComputerChoice();
+        playRound(humanChoice, computerChoice);
+        i++;
+        if(i ===5){
+            if(humanScore > computerScore){
+                result.textContent = "Congratulations! You won the game!";
+            } else if(computerScore > humanScore){
+                result.textContent = "Sorry! You lost the game!";
+            } else {
+                result.textContent = "The game is a draw!";
+            }
+            buttons.forEach(btn =>btn.disabled = true);
+        }
+    });
+});
